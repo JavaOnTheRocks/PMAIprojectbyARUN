@@ -112,9 +112,11 @@ body{
 
 /* Card content style */
 .icon{
-  font-size:2.2rem;
-  transform:translateZ(56px); /* pop the emoji forward for stronger 3D */
+  /* icon size and depth are computed in JS per-tile so emojis scale with grid */
+  font-size: var(--icon-size, 2.2rem);
+  transform: translateZ(var(--icon-translateZ, 56px)); /* pop the emoji forward proportionally */
   text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  line-height: 1; /* prevent extra line height on large fonts */
 }
 
 /* improve focus ring for accessibility */

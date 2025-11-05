@@ -143,6 +143,39 @@
         card.addEventListener('click', (ev) => this._onCardClick(ev, card));
         boardEl.appendChild(card);
       });
+      // Update icon size once cards are in the DOM
+      this._updateIconSize();
+      // Recompute on window resize (debounced)
+      if(!this._resizeListenerAdded){
+        this._resizeListenerAdded = true;
+        let timeout = null;
+        window.addEventListener('resize', ()=>{
+          clearTimeout(timeout);
+          timeout = setTimeout(()=> this._updateIconSize(), 150);
+        });
+      }
+    }
+
+    // Compute a suitable icon font-size and depth based on the rendered card size
+    _updateIconSize(){
+      // find one card to measure; if none exist, skip
+      const card = boardEl.querySelector('.card');
+      if(!card) return;
+
+      // computed gap between grid items
+      const styles = window.getComputedStyle(boardEl);
+      const gap = parseFloat(styles.gap) || 0;
+
+      // available width inside the board (clientWidth includes padding)
+      const boardWidth = boardEl.clientWidth;
+      const cardWidth = (boardWidth - gap * (this.grid - 1)) / this.grid;
+
+      // choose icon size as a fraction of card width
+      const iconSize = Math.max(14, Math.round(cardWidth * 0.55));
+      const translateZ = Math.max(8, Math.round(iconSize * 0.28));
+
+      boardEl.style.setProperty('--icon-size', iconSize + 'px');
+      boardEl.style.setProperty('--icon-translateZ', translateZ + 'px');
     }
 
     _onCardClick(e, card){
