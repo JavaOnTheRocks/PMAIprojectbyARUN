@@ -1,17 +1,21 @@
 /* Basic page layout */
 :root{
-  --bg: #fff5e6;
-  --card-bg: #4a235a;
-  --card-back: #2a0845;
-  --accent: #8e44ad;
-  --text: #2c3e50;
+  /* color tokens */
+  --bg-start: #f7fff6; /* shallow green-white */
+  --bg-end: #ecfff0;
+  --tile-front-1: #3b1850; /* dark purple */
+  --tile-front-2: #2a0845;
+  --tile-back-1: #ffffff;
+  --accent: #6f42c1;
+  --text: #22313a;
+  --flip-duration: 900ms; /* flip animation duration */
 }
 *{box-sizing:border-box}
 html,body{height:100%;}
 body{
   margin:0;
   font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg, #fffde7 0%, #fff5e6 100%);
+  background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
   color:var(--text);
   display:flex;
   align-items:flex-start;
@@ -45,9 +49,9 @@ body{
   gap:12px;
   perspective: 1200px; /* for 3D flip */
   padding:12px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(250,255,250,0.98));
   border-radius:12px;
-  box-shadow: 0 10px 30px rgba(142,68,173,0.2);
+  box-shadow: 0 10px 30px rgba(33,49,58,0.06);
 }
 
 /* Card sizes - responsive using grid-template-columns set via JS by adding inline style */
@@ -55,8 +59,9 @@ body{
   width:100%;
   position:relative;
   transform-style:preserve-3d;
-  transition: transform 1s cubic-bezier(.2,.9,.3,1); /* Slowed down from 0.6s to 1s */
+  transition: transform var(--flip-duration) cubic-bezier(.2,.9,.3,1);
   cursor:pointer;
+  will-change: transform;
 }
 .card-inner{
   position:relative;
@@ -75,13 +80,13 @@ body{
   overflow:hidden;
 }
 .card-front{
-  background: linear-gradient(180deg, #4a235a, #2a0845);
+  background: linear-gradient(180deg, var(--tile-front-1), var(--tile-front-2));
   transform: rotateY(0deg) translateZ(1px);
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 6px 18px rgba(74,35,90,0.45), 0 2px 6px rgba(74,35,90,0.35);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 8px 20px rgba(42,8,69,0.35), inset 0 -6px 18px rgba(0,0,0,0.12);
 }
 .card-back{
-  background: linear-gradient(180deg, #ffffff, #f8f9fa);
+  background: linear-gradient(180deg, var(--tile-back-1), #fbfbfb);
   transform: rotateY(180deg);
   font-size:1.8rem;
 }
@@ -89,6 +94,15 @@ body{
 /* Flipped state */
 .card.flipped .card-front{ transform: rotateY(180deg); }
 .card.flipped .card-back{ transform: rotateY(360deg); }
+
+/* Pressing state while pointer is down - gives a visible press/tilt */
+.card.pressing{
+  transform: translateY(2px) rotateX(8deg) scale(0.995);
+  transition: transform 120ms ease;
+}
+
+/* Make flip animation slightly more visible by animating inner faces too */
+.card-inner{ transition: transform calc(var(--flip-duration) / 1.2) cubic-bezier(.2,.9,.3,1); }
 
 /* Matched state - subtle glow */
 .card.matched .card-front{
@@ -98,9 +112,13 @@ body{
 
 /* Card content style */
 .icon{
-  font-size:2.4rem;
-  transform:translateZ(40px);
+  font-size:2.2rem;
+  transform:translateZ(56px); /* pop the emoji forward for stronger 3D */
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
 }
+
+/* improve focus ring for accessibility */
+.card:focus{ outline: 3px solid rgba(111,66,193,0.16); outline-offset:3px }
 
 /* Overlay (win screen) */
 .overlay{
