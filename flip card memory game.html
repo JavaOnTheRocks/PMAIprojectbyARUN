@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flip Card Memory Game</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>Flip Card Memory Game</h1>
+      <div class="controls">
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty">
+          <option value="4">4 x 4</option>
+          <option value="6">6 x 6</option>
+          <option value="8">8 x 8</option>
+        </select>
+        <button id="startBtn">Start Game</button>
+        <button id="restartBtn">Restart Game</button>
+      </div>
+      <div class="status">
+        <div>Moves: <span id="moves">0</span></div>
+        <div>Time: <span id="timer">00:00</span></div>
+      </div>
+    </header>
+
+    <section id="board" class="board" aria-live="polite"></section>
+  </main>
+
+  <!-- Win overlay -->
+  <div id="winOverlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>You Win!</h2>
+      <p>Time: <span id="winTime">00:00</span></p>
+      <p>Moves: <span id="winMoves">0</span></p>
+      <button id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
